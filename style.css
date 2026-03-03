@@ -1,0 +1,1114 @@
+/* ============================================================
+   style.css — Portfolio of Md Samiul Hauque Chowdhury
+   ============================================================
+   TABLE OF CONTENTS
+   1.  CSS Variables (colors, fonts)  ← Edit colors here
+   2.  Reset & Base
+   3.  Custom Cursor
+   4.  Background Canvas
+   5.  Layout
+   6.  Navigation
+   7.  Hero Section
+   8.  Orb (Hero Visual)
+   9.  Section Headers
+   10. About Section
+   11. Skills & Skill Bars
+   12. Histogram
+   13. Projects Grid
+   14. Gallery (Photo Section)
+   15. Experience / Timeline
+   16. Contact Section
+   17. Footer
+   18. Scroll Reveal Utility
+   19. Keyframe Animations
+   20. Responsive
+   ============================================================ */
+
+
+/* ============================================================
+   1. CSS VARIABLES
+   ← Change colors, fonts, and spacing here
+   ============================================================ */
+:root {
+  /* Background tones */
+  --bg:       #05070f;
+  --surface:  #0c1020;
+  --border:   #1a2340;
+
+  /* Accent colors */
+  --accent:   #00e5ff;   /* ← Primary glow color (cyan)   */
+  --accent2:  #7c3aed;   /* ← Secondary color (purple)    */
+  --accent3:  #f97316;   /* ← Tertiary color (orange)     */
+
+  /* Text */
+  --text:     #e8ecf5;
+  --muted:    #6b7a99;
+
+  /* Fonts — swap Google Font names here */
+  --font-display: 'Syne', sans-serif;
+  --font-mono:    'DM Mono', monospace;
+
+  /* Spacing */
+  --section-pad: 6rem;
+  --container-max: 1100px;
+}
+
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background:    var(--bg);
+  color:         var(--text);
+  font-family:   var(--font-display);
+  overflow-x:    hidden;
+  cursor:        none;            /* hides OS cursor; JS draws custom one */
+}
+
+a {
+  color:           inherit;
+  text-decoration: none;
+}
+
+img {
+  display:   block;
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   3. CUSTOM CURSOR
+   ← Dot + trailing ring. Controlled by script.js
+   ============================================================ */
+#cursor {
+  width:          10px;
+  height:         10px;
+  background:     var(--accent);
+  border-radius:  50%;
+  position:       fixed;
+  top:            -50px;
+  left:           -50px;
+  pointer-events: none;
+  z-index:        9999;
+  opacity:        0;
+  transition:     width .18s, height .18s, opacity .2s;
+}
+
+#cursor-trail {
+  width:          32px;
+  height:         32px;
+  border:         1.5px solid rgba(0, 229, 255, 0.5);
+  border-radius:  50%;
+  position:       fixed;
+  top:            -50px;
+  left:           -50px;
+  pointer-events: none;
+  z-index:        9998;
+  opacity:        0;
+  transition:     opacity .2s, transform .2s;
+}
+
+
+/* ============================================================
+   4. BACKGROUND CANVAS
+   ← Animated particle network rendered by script.js
+   ============================================================ */
+#bg-canvas {
+  position:       fixed;
+  top:            0;
+  left:           0;
+  width:          100%;
+  height:         100%;
+  z-index:        0;
+  opacity:        0.3;
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   5. LAYOUT
+   ============================================================ */
+.container {
+  max-width: var(--container-max);
+  margin:    0 auto;
+  padding:   0 2rem;
+  position:  relative;
+  z-index:   1;
+}
+
+section {
+  padding: var(--section-pad) 0;
+}
+
+
+/* ============================================================
+   6. NAVIGATION
+   ← Edit nav links in index.html inside <nav>
+   ============================================================ */
+nav {
+  position:        fixed;
+  top:             0;
+  width:           100%;
+  z-index:         100;
+  padding:         1.2rem 2rem;
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  background:      rgba(5, 7, 15, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom:   1px solid var(--border);
+}
+
+.nav-logo {
+  font-size:      .75rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-family:    var(--font-mono);
+  color:          var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap:     2rem;
+}
+
+.nav-links a {
+  font-size:      .75rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  font-family:    var(--font-mono);
+  color:          var(--muted);
+  transition:     color .2s;
+  position:       relative;
+}
+
+.nav-links a::after {
+  content:    '';
+  position:   absolute;
+  bottom:     -4px;
+  left:       0;
+  width:      0;
+  height:     1px;
+  background: var(--accent);
+  transition: width .3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--accent);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+}
+
+/* Mobile hamburger — hidden by default, shown at ≤600px */
+.nav-toggle {
+  display:    none;
+  flex-direction: column;
+  gap:        5px;
+  cursor:     none;
+  background: none;
+  border:     none;
+  padding:    4px;
+}
+
+.nav-toggle span {
+  display:    block;
+  width:      22px;
+  height:     1.5px;
+  background: var(--accent);
+  transition: transform .3s, opacity .3s;
+}
+
+
+/* ============================================================
+   7. HERO SECTION
+   ← Edit text in index.html inside #hero
+   ============================================================ */
+#hero {
+  min-height:  100vh;
+  display:     flex;
+  align-items: center;
+  padding-top: 80px;
+}
+
+.hero-inner {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   4rem;
+  align-items:           center;
+}
+
+.hero-tag {
+  font-family:    var(--font-mono);
+  font-size:      .7rem;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color:          var(--accent);
+  margin-bottom:  1.5rem;
+  opacity:        0;
+  animation:      fadeUp .6s .2s forwards;
+}
+
+.hero-name {
+  font-size:      clamp(2.5rem, 5vw, 4.5rem);
+  font-weight:    800;
+  line-height:    1.05;
+  letter-spacing: -.02em;
+  opacity:        0;
+  animation:      fadeUp .6s .4s forwards;
+}
+
+.hero-name .line2 {
+  display:                  block;
+  background:               linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip:  text;
+  -webkit-text-fill-color:  transparent;
+  background-clip:          text;
+}
+
+.hero-sub {
+  margin-top:  1.5rem;
+  font-family: var(--font-mono);
+  font-size:   .95rem;
+  color:       var(--muted);
+  line-height: 1.8;
+  opacity:     0;
+  animation:   fadeUp .6s .6s forwards;
+}
+
+.hero-sub .typed-text {
+  color: var(--accent);
+}
+
+.hero-btns {
+  margin-top: 2.5rem;
+  display:    flex;
+  gap:        1rem;
+  flex-wrap:  wrap;
+  opacity:    0;
+  animation:  fadeUp .6s .8s forwards;
+}
+
+/* Buttons */
+.btn {
+  padding:        .75rem 1.8rem;
+  border-radius:  4px;
+  font-size:      .8rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-family:    var(--font-mono);
+  cursor:         none;
+  transition:     all .25s;
+  display:        inline-block;
+}
+
+.btn-primary {
+  background:  var(--accent);
+  color:       var(--bg);
+  border:      none;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 28px rgba(0, 229, 255, .5);
+  transform:  translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color:      var(--text);
+  border:     1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color:        var(--accent);
+  transform:    translateY(-2px);
+}
+
+/* Hero right side — floating orb */
+.hero-visual {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  opacity:         0;
+  animation:       fadeIn 1s 1s forwards;
+}
+
+
+/* ============================================================
+   8. ORB (Hero Visual)
+   ← Change orb labels in index.html inside .orb-wrap
+   ============================================================ */
+.orb-wrap {
+  position: relative;
+  width:    320px;
+  height:   320px;
+}
+
+.orb {
+  width:         100%;
+  height:        100%;
+  border-radius: 50%;
+  background:    radial-gradient(circle at 35% 35%,
+                   rgba(0, 229, 255, .18),
+                   rgba(124, 58, 237, .06) 60%,
+                   transparent 80%);
+  border:        1px solid rgba(0, 229, 255, .2);
+  position:      relative;
+  animation:     orbFloat 4s ease-in-out infinite;
+}
+
+.orb::before {
+  content:       '';
+  position:      absolute;
+  inset:         20px;
+  border-radius: 50%;
+  border:        1px dashed rgba(0, 229, 255, .15);
+  animation:     spin 20s linear infinite;
+}
+
+.orb::after {
+  content:       '';
+  position:      absolute;
+  inset:         50px;
+  border-radius: 50%;
+  border:        1px dashed rgba(124, 58, 237, .2);
+  animation:     spin 12s linear infinite reverse;
+}
+
+.orb-label {
+  position:    absolute;
+  font-family: var(--font-mono);
+  font-size:   .65rem;
+  color:       var(--accent);
+  white-space: nowrap;
+}
+
+.orb-label:nth-child(1) { top: 10%;    left: 50%;   transform: translateX(-50%); }
+.orb-label:nth-child(2) { top: 50%;    right: -8%;  transform: translateY(-50%); }
+.orb-label:nth-child(3) { bottom: 10%; left: 50%;   transform: translateX(-50%); }
+.orb-label:nth-child(4) { top: 50%;    left: -8%;   transform: translateY(-50%); }
+
+.orb-core {
+  position:        absolute;
+  inset:           0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  flex-direction:  column;
+  gap:             .3rem;
+}
+
+.orb-core span:first-child {
+  font-size:   2.5rem;
+  font-weight: 800;
+  color:       var(--accent);
+  text-shadow: 0 0 30px rgba(0, 229, 255, .8);
+}
+
+.orb-core span:last-child {
+  font-family:    var(--font-mono);
+  font-size:      .65rem;
+  color:          var(--muted);
+  letter-spacing: .2em;
+}
+
+
+/* ============================================================
+   9. SECTION HEADERS
+   ← Used in every section. Number + title + decorative line.
+   ============================================================ */
+.section-header {
+  margin-bottom: 3.5rem;
+  display:       flex;
+  align-items:   baseline;
+  gap:           1.5rem;
+}
+
+.section-num {
+  font-family:    var(--font-mono);
+  font-size:      .7rem;
+  color:          var(--accent);
+  letter-spacing: .2em;
+}
+
+.section-title {
+  font-size:      clamp(1.8rem, 3vw, 2.6rem);
+  font-weight:    800;
+  letter-spacing: -.02em;
+}
+
+.section-line {
+  flex:       1;
+  height:     1px;
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+
+/* ============================================================
+   10. ABOUT SECTION
+   ← Edit bio text and stat numbers in index.html #about
+   ============================================================ */
+#about .about-grid {
+  display:               grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap:                   4rem;
+  align-items:           start;
+}
+
+.about-bio p {
+  font-size:     1rem;
+  color:         var(--muted);
+  line-height:   1.9;
+  margin-bottom: 1rem;
+}
+
+.about-bio p span {
+  color:       var(--accent);
+  font-family: var(--font-mono);
+}
+
+.about-stats {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   1.5rem;
+}
+
+.stat-card {
+  background:  var(--surface);
+  border:      1px solid var(--border);
+  border-radius: 8px;
+  padding:     1.5rem;
+  transition:  border-color .3s, transform .3s;
+}
+
+.stat-card:hover {
+  border-color: var(--accent);
+  transform:    translateY(-4px);
+}
+
+.stat-card .num {
+  font-size:   2rem;
+  font-weight: 800;
+  color:       var(--accent);
+}
+
+.stat-card .label {
+  font-family:    var(--font-mono);
+  font-size:      .7rem;
+  color:          var(--muted);
+  letter-spacing: .1em;
+  margin-top:     .25rem;
+}
+
+
+/* ============================================================
+   11. SKILLS & SKILL BARS
+   ← Add/remove .skill-bar blocks in index.html #skills
+   ← Change data-pct="85" (0–100) to set bar width
+   ← Change fill class: fill-a (cyan) | fill-b (orange) | fill-c (purple)
+   ============================================================ */
+#skills .skills-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   3rem;
+}
+
+.skill-category h3 {
+  font-family:    var(--font-mono);
+  font-size:      .7rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color:          var(--accent);
+  margin-bottom:  1.5rem;
+}
+
+.skill-bar {
+  margin-bottom: 1.1rem;
+}
+
+.skill-bar-top {
+  display:         flex;
+  justify-content: space-between;
+  font-family:     var(--font-mono);
+  font-size:       .78rem;
+  margin-bottom:   .4rem;
+}
+
+.skill-bar-name { color: var(--text); }
+.skill-bar-pct  { color: var(--accent); }
+
+.skill-bar-track {
+  height:        6px;
+  background:    var(--border);
+  border-radius: 3px;
+  overflow:      hidden;
+}
+
+.skill-bar-fill {
+  height:        100%;
+  border-radius: 3px;
+  width:         0;                                      /* animated by JS */
+  transition:    width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position:      relative;
+}
+
+/* Glowing dot at the end of each bar */
+.skill-bar-fill::after {
+  content:    '';
+  position:   absolute;
+  right:      0;
+  top:        50%;
+  transform:  translateY(-50%);
+  width:      8px;
+  height:     8px;
+  border-radius: 50%;
+  background:    inherit;
+  box-shadow:    0 0 8px currentColor;
+}
+
+/* Fill color variants — use one per .skill-bar-fill */
+.fill-a { background: linear-gradient(90deg, #7c3aed, #00e5ff); }   /* cyan  */
+.fill-b { background: linear-gradient(90deg, #00e5ff, #f97316); }   /* orange */
+.fill-c { background: linear-gradient(90deg, #c0392b, #7c3aed); }   /* purple */
+
+
+/* ============================================================
+   12. HISTOGRAM
+   ← Heights are set in script.js → var heights = [...]
+   ============================================================ */
+.histogram-wrap {
+  margin-top:    2.5rem;
+  padding:       1.5rem;
+  background:    var(--surface);
+  border:        1px solid var(--border);
+  border-radius: 8px;
+}
+
+.histogram-label {
+  font-family:    var(--font-mono);
+  font-size:      .65rem;
+  color:          var(--muted);
+  margin-bottom:  1rem;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+}
+
+.histogram-bars {
+  display:     flex;
+  align-items: flex-end;
+  gap:         6px;
+  height:      80px;
+}
+
+.h-bar {
+  flex:          1;
+  border-radius: 2px 2px 0 0;
+  background:    linear-gradient(180deg, var(--accent), rgba(0, 229, 255, .15));
+  transition:    height 1s cubic-bezier(0.16, 1, 0.3, 1);
+  height:        0;
+  opacity:       .8;
+}
+
+.h-bar:hover {
+  opacity: 1;
+  filter:  brightness(1.3);
+}
+
+
+/* ============================================================
+   13. PROJECTS GRID
+   ← Add/remove .project-card blocks in index.html #projects
+   ← To use a real image instead of canvas, replace:
+        <div class="project-img">
+          <canvas ...></canvas>
+        </div>
+      with:
+        <div class="project-img"
+             style="background-image:url('img/your-image.png');
+                    background-size:cover;
+                    background-position:center;">
+        </div>
+   ============================================================ */
+#projects .projects-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap:                   1.5rem;
+}
+
+.project-card {
+  background:    var(--surface);
+  border:        1px solid var(--border);
+  border-radius: 10px;
+  overflow:      hidden;
+  transition:    border-color .3s, transform .3s, box-shadow .3s;
+}
+
+.project-card:hover {
+  border-color: var(--accent);
+  transform:    translateY(-6px);
+  box-shadow:   0 20px 60px rgba(0, 0, 0, .5);
+}
+
+.project-img {
+  height:          180px;
+  background-color: var(--bg);
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  font-family:     var(--font-mono);
+  font-size:       .65rem;
+  color:           var(--muted);
+  letter-spacing:  .15em;
+  position:        relative;
+  overflow:        hidden;
+}
+
+.project-img canvas {
+  position: absolute;
+  inset:    0;
+}
+
+.project-img-label {
+  position: relative;
+  z-index:  1;
+}
+
+.project-body {
+  padding: 1.5rem;
+}
+
+/* Tags */
+.project-tags {
+  display:    flex;
+  gap:        .5rem;
+  flex-wrap:  wrap;
+  margin-bottom: .75rem;
+}
+
+.tag {
+  font-family:    var(--font-mono);
+  font-size:      .6rem;
+  padding:        .2rem .6rem;
+  border-radius:  3px;
+  background:     rgba(0, 229, 255, .08);
+  border:         1px solid rgba(0, 229, 255, .22);
+  color:          var(--accent);
+  letter-spacing: .08em;
+}
+
+.tag.purple {
+  background:   rgba(124, 58, 237, .1);
+  border-color: rgba(124, 58, 237, .3);
+  color:        #a78bfa;
+}
+
+.tag.orange {
+  background:   rgba(249, 115, 22, .1);
+  border-color: rgba(249, 115, 22, .3);
+  color:        var(--accent3);
+}
+
+.project-title {
+  font-size:     1.1rem;
+  font-weight:   700;
+  margin-bottom: .5rem;
+}
+
+.project-desc {
+  font-size:   .85rem;
+  color:       var(--muted);
+  line-height: 1.7;
+  font-family: var(--font-mono);
+}
+
+.project-links {
+  margin-top: 1.2rem;
+  display:    flex;
+  gap:        1rem;
+}
+
+.project-link {
+  font-family:    var(--font-mono);
+  font-size:      .7rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color:          var(--muted);
+  display:        flex;
+  align-items:    center;
+  gap:            .4rem;
+  transition:     color .2s;
+}
+
+.project-link:hover { color: var(--accent); }
+.project-link svg   { width: 14px; height: 14px; flex-shrink: 0; }
+
+
+/* ============================================================
+   14. GALLERY — Personal Photo Section
+   ← Put your images in the  img/  folder
+   ← Add <img> tags inside .gallery-grid in index.html #gallery
+   ← Recommended image size: 800×600px or 1:1 square
+   ============================================================ */
+#gallery {
+  background: var(--surface);
+}
+
+.gallery-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap:                   1rem;
+}
+
+/* Each item wraps one image */
+.gallery-item {
+  position:      relative;
+  border-radius: 8px;
+  overflow:      hidden;
+  border:        1px solid var(--border);
+  aspect-ratio:  4/3;            /* keeps all cards the same ratio */
+  cursor:        none;
+  transition:    transform .3s, border-color .3s, box-shadow .3s;
+}
+
+.gallery-item:hover {
+  transform:    translateY(-4px);
+  border-color: var(--accent);
+  box-shadow:   0 12px 40px rgba(0, 0, 0, .5);
+}
+
+.gallery-item img {
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+  transition: transform .4s;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.04);
+}
+
+/* Optional caption overlay — appears on hover */
+.gallery-caption {
+  position:    absolute;
+  bottom:      0;
+  left:        0;
+  right:       0;
+  padding:     .75rem 1rem;
+  background:  linear-gradient(transparent, rgba(5, 7, 15, .85));
+  font-family: var(--font-mono);
+  font-size:   .65rem;
+  color:       var(--text);
+  letter-spacing: .1em;
+  opacity:     0;
+  transform:   translateY(6px);
+  transition:  opacity .3s, transform .3s;
+}
+
+.gallery-item:hover .gallery-caption {
+  opacity:   1;
+  transform: translateY(0);
+}
+
+/* Lightbox overlay — activated by JS when image is clicked */
+#lightbox {
+  position:        fixed;
+  inset:           0;
+  background:      rgba(5, 7, 15, .95);
+  z-index:         500;
+  display:         none;          /* shown by JS */
+  align-items:     center;
+  justify-content: center;
+}
+
+#lightbox.open {
+  display: flex;
+}
+
+#lightbox img {
+  max-width:     90vw;
+  max-height:    85vh;
+  border-radius: 6px;
+  border:        1px solid var(--border);
+  box-shadow:    0 30px 80px rgba(0, 0, 0, .8);
+}
+
+#lightbox-close {
+  position:    absolute;
+  top:         1.5rem;
+  right:       1.5rem;
+  font-family: var(--font-mono);
+  font-size:   .75rem;
+  color:       var(--muted);
+  background:  none;
+  border:      1px solid var(--border);
+  border-radius: 4px;
+  padding:     .4rem .8rem;
+  cursor:      none;
+  transition:  color .2s, border-color .2s;
+  letter-spacing: .1em;
+}
+
+#lightbox-close:hover {
+  color:        var(--accent);
+  border-color: var(--accent);
+}
+
+
+/* ============================================================
+   15. EXPERIENCE / TIMELINE
+   ← Add/remove .timeline-item blocks in index.html #experience
+   ============================================================ */
+#experience .timeline {
+  position:    relative;
+  padding-left: 2rem;
+}
+
+#experience .timeline::before {
+  content:    '';
+  position:   absolute;
+  left:       0;
+  top:        0;
+  bottom:     0;
+  width:      1px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2), transparent);
+}
+
+.timeline-item {
+  position:   relative;
+  padding-bottom: 2.5rem;
+  opacity:    0;
+  transform:  translateX(-20px);
+  transition: opacity .6s, transform .6s;
+}
+
+.timeline-item.visible {
+  opacity:   1;
+  transform: translateX(0);
+}
+
+.timeline-dot {
+  position:      absolute;
+  left:          -2.4rem;
+  top:           .2rem;
+  width:         10px;
+  height:        10px;
+  border-radius: 50%;
+  background:    var(--accent);
+  box-shadow:    0 0 10px rgba(0, 229, 255, .8);
+}
+
+.timeline-date {
+  font-family:    var(--font-mono);
+  font-size:      .7rem;
+  color:          var(--accent);
+  letter-spacing: .15em;
+  margin-bottom:  .3rem;
+}
+
+.timeline-role {
+  font-size:     1rem;
+  font-weight:   700;
+  margin-bottom: .2rem;
+}
+
+.timeline-org {
+  font-family:   var(--font-mono);
+  font-size:     .8rem;
+  color:         var(--muted);
+  margin-bottom: .6rem;
+}
+
+.timeline-desc {
+  font-size:  .85rem;
+  color:      var(--muted);
+  line-height: 1.7;
+  max-width:  560px;
+}
+
+
+/* ============================================================
+   16. CONTACT SECTION
+   ← Edit email/GitHub/LinkedIn href values in index.html #contact
+   ============================================================ */
+#contact {
+  text-align: center;
+}
+
+.contact-inner {
+  max-width: 600px;
+  margin:    0 auto;
+}
+
+.contact-lead {
+  font-size:   clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.contact-sub {
+  font-family:   var(--font-mono);
+  font-size:     .85rem;
+  color:         var(--muted);
+  margin-bottom: 2.5rem;
+  line-height:   1.8;
+}
+
+.contact-links {
+  display:         flex;
+  justify-content: center;
+  gap:             1.5rem;
+  flex-wrap:       wrap;
+}
+
+.contact-link-card {
+  padding:        1rem 1.5rem;
+  background:     var(--surface);
+  border:         1px solid var(--border);
+  border-radius:  8px;
+  font-family:    var(--font-mono);
+  font-size:      .75rem;
+  letter-spacing: .1em;
+  display:        flex;
+  align-items:    center;
+  gap:            .6rem;
+  transition:     all .25s;
+}
+
+.contact-link-card:hover {
+  border-color: var(--accent);
+  color:        var(--accent);
+  transform:    translateY(-4px);
+  box-shadow:   0 10px 30px rgba(0, 0, 0, .4);
+}
+
+.contact-link-card svg {
+  width:     16px;
+  height:    16px;
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   17. FOOTER
+   ← Edit footer text in index.html <footer>
+   ============================================================ */
+footer {
+  border-top:     1px solid var(--border);
+  padding:        1.5rem 2rem;
+  text-align:     center;
+  font-family:    var(--font-mono);
+  font-size:      .65rem;
+  color:          var(--muted);
+  letter-spacing: .1em;
+  position:       relative;
+  z-index:        1;
+}
+
+
+/* ============================================================
+   18. SCROLL REVEAL UTILITY
+   ← Add class="reveal" to any element to fade it in on scroll
+   ============================================================ */
+.reveal {
+  opacity:    0;
+  transform:  translateY(30px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal.visible {
+  opacity:   1;
+  transform: translateY(0);
+}
+
+
+/* ============================================================
+   19. KEYFRAME ANIMATIONS
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0);    }
+  50%       { transform: translateY(-16px); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ============================================================
+   20. RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-visual {
+    display: none;          /* hide orb on small screens */
+  }
+
+  #about .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #skills .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-links {
+    display:        none;
+    flex-direction: column;
+    position:       fixed;
+    top:            60px;
+    left:           0;
+    right:          0;
+    background:     rgba(5, 7, 15, .97);
+    padding:        2rem;
+    gap:            1.5rem;
+    border-bottom:  1px solid var(--border);
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .contact-links {
+    flex-direction: column;
+    align-items:    center;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
